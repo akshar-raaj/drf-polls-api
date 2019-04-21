@@ -13,7 +13,15 @@ class Question(models.Model):
 
     def was_published_recently(self):
         now = timezone.now()
-        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+        return now - datetime.timedelta(days=3) <= self.pub_date <= now
+
+    def verbose_question_text(self):
+        return "Question : %s" % (self.question_text)
+
+    def choices(self):
+        if not hasattr(self, '_choices'):
+            self._choices = self.choice_set.all()
+        return self._choices
 
 
 class Choice(models.Model):

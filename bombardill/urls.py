@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls')),
     path('books/', include('books.urls')),
+
+    path('api/polls/', include('polls.urls')),
 ]
