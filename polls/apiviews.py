@@ -18,7 +18,7 @@ def questions_view(request):
         serializer = QuestionListPageSerializer(data=request.data)
         if serializer.is_valid():
             question = serializer.save()
-            return Response(QuestionListPageSerializer(question).data, status=status.HTTP_201_CREATED)
+            return Response(QuestionDetailPageSerializer(question).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
