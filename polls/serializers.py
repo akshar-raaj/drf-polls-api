@@ -20,14 +20,19 @@ class QuestionListPageSerializer(serializers.Serializer):
     question_text = serializers.CharField(max_length=200)
     pub_date = serializers.DateTimeField()
     was_published_recently = serializers.BooleanField(read_only=True) # Serializer is smart enough to understand that was_published_recently is a method on Question
-    choice = ChoiceSerializer(write_only=True)
+    choices = ChoiceSerializer(many=True, write_only=True, required=False)
 
     def create(self, validated_data):
-        choice_dict = validated_data['choice']
+        choices = validated_data.pop('choices', [])
         question = Question.objects.create(**validated_data)
-        choice_dict['question'] = question
-        Choice.objects.create(**choice_dict)
+        for choice_dict in choices:
+            choice_dict['question'] = question
+            Choice.objects.create(**choice_dict)
         return question
+
+
+class MultipleQuestionsCreateSerializer(serializers.Serializer):
+    questions = QuestionListPageSerializer(write_only=True)
 
 
 class QuestionDetailPageSerializer(QuestionListPageSerializer):

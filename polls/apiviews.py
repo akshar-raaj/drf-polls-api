@@ -22,6 +22,15 @@ def questions_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+def multiple_questions_view(request):
+    serializer = QuestionListPageSerializer(many=True, data=request.data)
+    if serializer.is_valid():
+        questions = serializer.save()
+        return Response(QuestionDetailPageSerializer(questions, many=True).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 def question_detail_view(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
