@@ -13,15 +13,22 @@ class Question(models.Model):
 
     def was_published_recently(self):
         now = timezone.now()
-        return now - datetime.timedelta(days=3) <= self.pub_date <= now
-
-    def verbose_question_text(self):
-        return "Question : %s" % (self.question_text)
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
     def choices(self):
         if not hasattr(self, '_choices'):
             self._choices = self.choice_set.all()
         return self._choices
+
+    def max_voted_choice(self):
+        if not hasattr(self, '_max_voted_choice'):
+            choices = self.choice_set.order_by('-votes')
+            if not choices:
+                self._max_voted_choice = None
+            else:
+                self._max_voted_choice = choices[0]
+        return self._max_voted_choice
+
 
 
 class Choice(models.Model):
