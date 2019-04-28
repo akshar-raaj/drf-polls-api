@@ -85,9 +85,9 @@ Generic view for list (GET /api/polls/questions/) and detail (GET /api/polls/que
 
 - Testing the apis
 - Using kwargs partial on serializer
+- ModelSerializer.save(user=request.user) could be used
 - Using kwargs context on serializer
 - Using kwargs allow_empty with many on serializer
-- ModelSerializer.save(user=request.user) could be used
 - Can serializer.validated_data be edited and we can do serializer.validated_data['user'] = request.user before calling serializer.save().
 - raise_exception with is_valid()
 - Add a custom validation on a particular serializer field. Add validation_question_text().
@@ -100,3 +100,11 @@ Generic view for list (GET /api/polls/questions/) and detail (GET /api/polls/que
         - user_email = serializers.EmailField(read_only=True, source='user.email')
 - Show usage of source='*'
 question = serializers.CharField(max_length=200, read_only=True, source='question_text')
+- Add validation during question create
+- Adding some validators
+    class Meta:
+        validators = []
+- Will you need self.data during POST, PATCH, PUT or only self.validated_data? Difference.
+- Creating multiple Choice instances in a single api call. How is_valid(), errors and create() for ListSerializer works.
+- authentication and authorization post
+- User initial property of Field
