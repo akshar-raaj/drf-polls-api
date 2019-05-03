@@ -15,10 +15,11 @@ def questions_view(request):
         serializer = QuestionListPageSerializer(questions, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        serializer = QuestionListPageSerializer(data=request.data)
+        serializer = QuestionDetailPageSerializer(data=request.data)
         if serializer.is_valid():
             question = serializer.save()
-            return Response(QuestionListPageSerializer(question).data, status=status.HTTP_201_CREATED)
+            serializer = QuestionDetailPageSerializer(question)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -45,7 +46,7 @@ def choices_view(request, question_id):
     serializer = ChoiceSerializer(data=request.data)
     if serializer.is_valid():
         choice = serializer.save(question=question)
-        return Response(ChoiceSerializer(choice).data, status=status.HTTP_201_CREATED)
+        return Response("Choice created with id %s" % (choice.id), status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
