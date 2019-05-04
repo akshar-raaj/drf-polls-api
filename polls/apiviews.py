@@ -40,14 +40,19 @@ def question_detail_view(request, question_id):
         return Response("Question deleted", status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 def choices_view(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    serializer = ChoiceSerializer(data=request.data)
-    if serializer.is_valid():
-        choice = serializer.save(question=question)
-        return Response("Choice created with id %s" % (choice.id), status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'GET':
+        choices = question.choice_set.all()
+        serializer = ChoiceSerializer(choices, many=True)
+        return Response(serializer.data)
+    else:
+        serializer = ChoiceSerializer(data=request.data)
+        if serializer.is_valid():
+            choice = serializer.save(question=question)
+            return Response("Choice created with id %s" % (choice.id), status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PATCH'])
