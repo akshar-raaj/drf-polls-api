@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Question, Choice
-from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, ChoiceSerializer, VoteSerializer, QuestionResultPageSerializer
+from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, ChoiceSerializer, VoteSerializer, QuestionResultPageSerializer, ChoiceCreateSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -53,6 +53,14 @@ def choices_view(request, question_id):
             choice = serializer.save(question=question)
             return Response("Choice created with id %s" % (choice.id), status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def choices_create_view(request):
+    serializer = ChoiceCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        choice = serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PATCH'])

@@ -10,6 +10,13 @@ class ChoiceSerializer(serializers.ModelSerializer):
         fields = ('id', 'choice_text')
 
 
+class ChoiceCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Choice
+        fields = ('choice_text', 'question')
+
+
 class ChoiceSerializerWithVotes(ChoiceSerializer):
 
     class Meta(ChoiceSerializer.Meta):
