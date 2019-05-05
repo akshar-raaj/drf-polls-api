@@ -3,24 +3,28 @@ from rest_framework import serializers
 from .models import Question, Choice
 
 
-class ChoiceSerializer(serializers.ModelSerializer):
+class QuestionChoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Choice
         fields = ('id', 'choice_text')
 
 
-class ChoiceCreateSerializer(serializers.ModelSerializer):
+class ChoiceSerializer(serializers.ModelSerializer):
+    question_text = serializers.CharField(read_only=True, source='question.question_text')
 
     class Meta:
         model = Choice
-        fields = ('choice_text', 'question')
+        fields = ('id', 'choice_text', 'question', 'question_text')
+        extra_kwargs = {
+            'question': {'write_only': True}
+        }
 
 
-class ChoiceSerializerWithVotes(ChoiceSerializer):
+class QuestionChoiceSerializerWithVotes(QuestionChoiceSerializer):
 
-    class Meta(ChoiceSerializer.Meta):
-        fields = ChoiceSerializer.Meta.fields + ('votes',)
+    class Meta(QuestionChoiceSerializer.Meta):
+        fields = QuestionChoiceSerializer.Meta.fields + ('votes',)
 
 
 class QuestionListPageSerializer(serializers.ModelSerializer):
@@ -33,7 +37,7 @@ class QuestionListPageSerializer(serializers.ModelSerializer):
 
 
 class QuestionDetailPageSerializer(QuestionListPageSerializer):
-    choice_set = ChoiceSerializer(many=True)
+    choice_set = QuestionChoiceSerializer(many=True)
 
     def create(self, validated_data):
         choice_validated_data = validated_data.pop('choice_set')
@@ -46,7 +50,7 @@ class QuestionDetailPageSerializer(QuestionListPageSerializer):
 
 
 class QuestionResultPageSerializer(QuestionListPageSerializer):
-    choices = ChoiceSerializerWithVotes(many=True, read_only=True)
+    choices = QuestionChoiceSerializerWithVotes(many=True, read_only=True)
 
 
 class VoteSerializer(serializers.Serializer):

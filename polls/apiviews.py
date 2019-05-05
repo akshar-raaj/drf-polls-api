@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Question, Choice
-from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, ChoiceSerializer, VoteSerializer, QuestionResultPageSerializer, ChoiceCreateSerializer
+from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, QuestionChoiceSerializer, VoteSerializer, QuestionResultPageSerializer, ChoiceSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -41,26 +41,31 @@ def question_detail_view(request, question_id):
 
 
 @api_view(['GET', 'POST'])
-def choices_view(request, question_id):
+def question_choices_view(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     if request.method == 'GET':
         choices = question.choice_set.all()
-        serializer = ChoiceSerializer(choices, many=True)
+        serializer = QuestionChoiceSerializer(choices, many=True)
         return Response(serializer.data)
     else:
-        serializer = ChoiceSerializer(data=request.data)
+        serializer = QuestionChoiceSerializer(data=request.data)
         if serializer.is_valid():
             choice = serializer.save(question=question)
             return Response("Choice created with id %s" % (choice.id), status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def choices_create_view(request):
-    serializer = ChoiceCreateSerializer(data=request.data)
-    if serializer.is_valid():
-        choice = serializer.save()
+@api_view(['GET', 'POST', 'DELETE'])
+def choices_view(request):
+    if request.method == 'GET':
+        choices = Choice.objects.all()
+        serializer = ChoiceSerializer(choices, many=True)
         return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'POST':
+        serializer = ChoiceSerializer(data=request.data)
+        if serializer.is_valid():
+            choice = serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PATCH'])
