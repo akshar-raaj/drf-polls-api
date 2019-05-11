@@ -1,6 +1,7 @@
 from django.urls import path
 
-from . import views
+from rest_framework.routers import SimpleRouter
+
 from . import apiviews
 
 app_name = 'polls'
@@ -16,3 +17,10 @@ urlpatterns = [
     path('another-questions/', apiviews.AnotherQuestionsView.as_view({'get': 'list'}), name='another_questions_view'),
     path('another-questions/<int:question_id>/', apiviews.AnotherQuestionsView.as_view({'get': 'retrieve'}), name='another_questions_view_retreive'),
 ]
+
+# Multiple viewsets can be registered with a single router.
+# Each viewset will probably have actions list, create, retrieve, partial_update, destroy.
+router = SimpleRouter()
+router.register('yet-another-questions', apiviews.YetAnotherQuestionsViewSet, basename='yet-another-question')
+
+urlpatterns += router.urls

@@ -70,3 +70,9 @@ class QuestionResultView(RetrieveAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionResultPageSerializer
     lookup_url_kwarg = 'question_id'
+
+
+class YetAnotherQuestionsViewSet(ReadOnlyModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionDetailPageSerializer
+    lookup_url_kwarg = 'question_id'
