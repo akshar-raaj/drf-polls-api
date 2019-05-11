@@ -73,9 +73,7 @@ class VoteView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class QuestionResultView(APIView):
-
-    def get(self, request, *args, **kwargs):
-        question = get_object_or_404(Question, pk=kwargs['question_id'])
-        serializer = QuestionResultPageSerializer(question)
-        return Response(serializer.data)
+class QuestionResultView(RetrieveAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionResultPageSerializer
+    lookup_url_kwarg = 'question_id'
