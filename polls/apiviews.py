@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
 from .models import Question, Choice
@@ -13,6 +14,7 @@ from .serializers import QuestionListPageSerializer, QuestionDetailPageSerialize
 class QuestionsView(ListCreateAPIView):
 
     queryset = Question.objects.all()
+    pagination_class = PageNumberPagination
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
