@@ -3,26 +3,22 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework import status
 
 from .models import Question, Choice
 from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, QuestionChoiceSerializer, VoteSerializer, QuestionResultPageSerializer, ChoiceSerializer
 
 
-class QuestionsView(APIView):
+class QuestionsView(ListCreateAPIView):
 
-    def get(self, request, *args, **kwargs):
-        questions = Question.objects.all()
-        serializer = QuestionListPageSerializer(questions, many=True)
-        return Response(serializer.data)
+    queryset = Question.objects.all()
 
-    def post(self, request, *args, **kwargs):
-        serializer = QuestionDetailPageSerializer(data=request.data)
-        if serializer.is_valid():
-            question = serializer.save()
-            serializer = QuestionDetailPageSerializer(question)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return QuestionListPageSerializer
+        else:
+            return QuestionDetailPageSerializer
 
 
 class QuestionDetailView(APIView):
