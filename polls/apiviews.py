@@ -28,21 +28,16 @@ class QuestionDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
 
 
-class QuestionChoicesView(APIView):
-    
-    def get(self, request, *args, **kwargs):
-        question = get_object_or_404(Question, pk=kwargs['question_id'])
-        choices = question.choice_set.all()
-        serializer = QuestionChoiceSerializer(choices, many=True)
-        return Response(serializer.data)
+class QuestionChoicesView(ListCreateAPIView):
+    serializer_class = QuestionChoiceSerializer
 
-    def post(self, request, *args, **kwargs):
-        question = get_object_or_404(Question, pk=kwargs['question_id'])
-        serializer = QuestionChoiceSerializer(data=request.data)
-        if serializer.is_valid():
-            choice = serializer.save(question=question)
-            return Response("Choice created with id %s" % (choice.id), status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        question = get_object_or_404(Question, pk=self.kwargs['question_id'])
+        return question.choice_set.all()
+
+    def perform_create(self, serializer):
+        question = get_object_or_404(Question, pk=self.kwargs['question_id'])
+        serializer.save(question=question)
 
 
 class ChoicesView(ListCreateAPIView):
