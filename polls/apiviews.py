@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import status
 
 from .models import Question, Choice
@@ -21,25 +21,11 @@ class QuestionsView(ListCreateAPIView):
             return QuestionDetailPageSerializer
 
 
-class QuestionDetailView(APIView):
+class QuestionDetailView(RetrieveUpdateDestroyAPIView):
 
-    def get(self, request, *args, **kwargs):
-        question = get_object_or_404(Question, pk=kwargs['question_id'])
-        serializer = QuestionDetailPageSerializer(question)
-        return Response(serializer.data)
-
-    def patch(self, request, *args, **kwargs):
-        question = get_object_or_404(Question, pk=kwargs['question_id'])
-        serializer = QuestionDetailPageSerializer(question, data=request.data, partial=True)
-        if serializer.is_valid():
-            question = serializer.save()
-            return Response(QuestionDetailPageSerializer(question).data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, *args, **kwargs):
-        question = get_object_or_404(Question, pk=kwargs['question_id'])
-        question.delete()
-        return Response("Question deleted", status=status.HTTP_204_NO_CONTENT)
+    serializer_class = QuestionDetailPageSerializer
+    lookup_url_kwarg = 'question_id'
+    queryset = Question.objects.all()
 
 
 class QuestionChoicesView(APIView):
