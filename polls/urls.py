@@ -12,4 +12,7 @@ urlpatterns = [
     path('questions/<int:question_id>/result/', apiviews.QuestionResultView.as_view(), name='question_result_view'),
 
     path('choices/', apiviews.ChoicesView.as_view(), name='choices_view'),
+
+    path('another-questions/', apiviews.AnotherQuestionsView.as_view({'get': 'list'}), name='another_questions_view'),
+    path('another-questions/<int:question_id>/', apiviews.AnotherQuestionsView.as_view({'get': 'retrieve'}), name='another_questions_view_retreive'),
 ]

@@ -1,14 +1,27 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
+from rest_framework.viewsets import ViewSet
 
 from .models import Question, Choice
 from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, QuestionChoiceSerializer, VoteSerializer, QuestionResultPageSerializer, ChoiceSerializer
+
+
+class AnotherQuestionsView(ViewSet):
+
+    def list(self, request, *args, **kwargs):
+        questions = Question.objects.all()
+        serializer = QuestionDetailPageSerializer(questions, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        question = get_object_or_404(Question, id=kwargs['question_id'])
+        serializer = QuestionDetailPageSerializer(question)
+        return Response(serializer.data)
 
 
 class QuestionsView(ListCreateAPIView):
