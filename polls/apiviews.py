@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
-from rest_framework.viewsets import ViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ViewSet, ReadOnlyModelViewSet, ModelViewSet
 
 from .models import Question, Choice
 from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, QuestionChoiceSerializer, VoteSerializer, QuestionResultPageSerializer, ChoiceSerializer
@@ -72,7 +72,7 @@ class QuestionResultView(RetrieveAPIView):
     lookup_url_kwarg = 'question_id'
 
 
-class YetAnotherQuestionsViewSet(ReadOnlyModelViewSet):
+class YetAnotherQuestionsViewSet(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionDetailPageSerializer
     lookup_url_kwarg = 'question_id'
