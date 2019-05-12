@@ -1,0 +1,7 @@
+{
+    "name": "Polls API",
+    "version": "1.0.0",
+    "description": "API Layer for Django Polls app",
+    "title": "Polls is a wonderful app for beginners!",
+    "url": "http://localhost:8000/polls"
+}
