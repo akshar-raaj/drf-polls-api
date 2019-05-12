@@ -29,7 +29,7 @@ class QuestionChoiceSerializerWithVotes(QuestionChoiceSerializer):
 
 class QuestionListPageSerializer(serializers.ModelSerializer):
 
-    was_published_recently = serializers.BooleanField(read_only=True)
+    # was_published_recently = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Question
