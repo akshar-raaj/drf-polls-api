@@ -75,8 +75,19 @@ class QuestionResultView(RetrieveAPIView):
 
 class YetAnotherQuestionsViewSet(ModelViewSet):
     queryset = Question.objects.all()
-    serializer_class = QuestionDetailPageSerializer
     lookup_url_kwarg = 'question_id'
+
+    def get_serializer_class(self):
+        # Handle .create() requests
+        if self.request.method == 'POST':
+            return QuestionDetailPageSerializer
+        # Handle .result() requests
+        elif self.detail is True and self.request.method == 'GET' and self.name == 'Result':
+            return QuestionResultPageSerializer
+        # Handle .retrieve() requests
+        elif self.detail is True and self.request.method == 'GET':
+            return QuestionDetailPageSerializer
+        return QuestionListPageSerializer
 
     @action(detail=True)
     def result(self, request, *args, **kwargs):
