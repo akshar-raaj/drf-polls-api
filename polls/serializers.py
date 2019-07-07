@@ -3,6 +3,12 @@ from rest_framework import serializers
 from .models import Question, Choice
 
 
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = '__all__'
+
+
 class QuestionChoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -45,7 +51,7 @@ class QuestionDetailPageSerializer(QuestionListPageSerializer):
         choice_set_serializer = self.fields['choice_set']
         for each in choice_validated_data:
             each['question'] = question
-        choices = choice_set_serializer.create(choice_validated_data)
+        choice_set_serializer.create(choice_validated_data)
         return question
 
 
