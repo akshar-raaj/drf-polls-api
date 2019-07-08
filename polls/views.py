@@ -12,8 +12,14 @@ class SearchFilterWithSpaces(filters.SearchFilter):
         return [term.strip() for term in terms]
 
 
+class DynamicSearchFilter(filters.SearchFilter):
+    def get_search_fields(self, view, request):
+        return request.GET.getlist('search_fields', [])
+
+
 class QuestionsAPIView(generics.ListCreateAPIView):
-    search_fields = ['question_text', 'author']
-    filter_backends = (filters.SearchFilter,)
+    # search_fields = ['question_text', 'author']
+    # filter_backends = (filters.SearchFilter,)
+    filter_backends = (DynamicSearchFilter,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
