@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'books',
     'polls.apps.PollsConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
