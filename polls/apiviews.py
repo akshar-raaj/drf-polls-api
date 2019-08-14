@@ -5,102 +5,39 @@ from rest_framework.generics import ListCreateAPIView
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Question, Choice
 from .serializers import QuestionListPageSerializer, QuestionDetailPageSerializer, QuestionChoiceSerializer, VoteSerializer, QuestionResultPageSerializer, ChoiceSerializer
 
 
 class ChoicesView(ListCreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = ChoiceSerializer
     queryset = Choice.objects.all()
 
 
 class QuestionsViewSet(ModelViewSet):
     """
-    @api {get} /questions/ Questions list
-    @apiName Questions list
-    @apiDescription This returns a list of questions.
-    @apiGroup Questions
-    @apiVersion 1.0.0
-
-    @apiSuccess {Integer} id Unique identifier
-    @apiSuccess {String} pub_date Published date
-    @apiSuccess {String} question_text Question text
-    @apiSuccess {String} was_published_recently Was published recently?
-
-    @apiSuccessExample Response
-        HTTP/1.1 200 OK
-        [
-            {
-                "id": 1,
-                "was_published_recently": false,
-                "question_text": "Who is the most likable character in GOT?"
-                "pub_date": "2019-05-09T00:00:00Z",
-            },
-            {
-                "id": 46,
-                "was_published_recently": false,
-                "question_text": "Who is your favorite fictional character?",
-                "pub_date": "2019-05-10T00:00:00Z"
-            }
-        ]
-    """
-    """
-    @api {post} /questions/ Create a question
-    @apiName Question create
-    @apiGroup Questions
-    @apiVersion 1.0.0
-
-    @apiParam (Payload) {String} pub_date Published date
-    @apiParam (Payload) {String} question_text Question text
-    @apiParam (Payload) {Dictionary[]} choice_set List of choices
-
-    @apiParamExample {json} Payload-example
-        {
-            "pub_date": "2019-05-05T00:00",
-            "question_text": "Is Samsung more reliable than iPhone?",
-            "choice_set": [
-                {
-                    "choice_text": "No"
-                }
-            ]
-        }
-
-    @apiSuccess {Integer} id Unique identifier
-    @apiSuccess {Dictionary[]} choice_set List of choices
-    @apiSuccess {String} pub_date Published date
-    @apiSuccess {String} question_text Question text
-    @apiSuccess {String} was_published_recently Was published recently?
-
-    @apiSuccessExample Response
-        HTTP/1.1 201 Created
-        {
-            "id": 50,
-            "was_published_recently": false,
-            "choice_set": [
-                {
-                    "id": 50,
-                    "choice_text": "No"
-                }
-            ],
-            "question_text": "Is Samsung more reliable than iPhone?",
-            "pub_date": "2019-05-05T00:00:00Z"
-        }
+    This does LIST/RETRIEVE/CREATE/UPDATE/DESTROY on Questions.
     """
     queryset = Question.objects.all()
     lookup_url_kwarg = 'question_id'
+    serializer_class = QuestionListPageSerializer
 
-    def get_serializer_class(self):
-        # Handle .create() requests
-        if self.request.method == 'POST':
-            return QuestionDetailPageSerializer
-        # Handle .result() requests
-        elif self.detail is True and self.request.method == 'GET' and self.name == 'Result':
-            return QuestionResultPageSerializer
-        # Handle .retrieve() requests
-        elif self.detail is True and self.request.method == 'GET':
-            return QuestionDetailPageSerializer
-        return QuestionListPageSerializer
+    # def get_serializer_class(self):
+        # # Handle .create() requests
+        # if self.request.method == 'POST':
+            # return QuestionDetailPageSerializer
+        # # Handle .result() requests
+        # elif self.detail is True and self.request.method == 'GET' and self.name == 'Result':
+            # return QuestionResultPageSerializer
+        # # Handle .retrieve() requests
+        # elif self.detail is True and self.request.method == 'GET':
+            # return QuestionDetailPageSerializer
+        # return QuestionListPageSerializer
 
     @action(detail=True)
     def result(self, request, *args, **kwargs):
