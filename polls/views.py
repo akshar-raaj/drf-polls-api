@@ -18,8 +18,8 @@ class DynamicSearchFilter(filters.SearchFilter):
 
 
 class QuestionsAPIView(generics.ListCreateAPIView):
-    # search_fields = ['question_text', 'author']
-    # filter_backends = (filters.SearchFilter,)
-    filter_backends = (DynamicSearchFilter,)
+    search_fields = ['pub_date', 'is_featured']
+    filter_backends = (filters.SearchFilter,)
+    # filter_backends = (DynamicSearchFilter,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
