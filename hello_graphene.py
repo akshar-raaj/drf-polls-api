@@ -11,10 +11,10 @@ data = {
 }
 
 class PersonType(ObjectType):
+    family_name = String(title=String(default_value='raaj'))
     first_name = String()
     last_name = String()
     age = Int()
-    friends = List('self')
 
     def resolve_first_name(person, info):
         return person.first_name
@@ -22,17 +22,21 @@ class PersonType(ObjectType):
     def resolve_last_name(person, info):
         return person.last_name
 
+    def resolve_family_name(person, info, title):
+        return title
+
     def resolve_age(person, info):
         return person.age
 
 
 class Query(ObjectType):
-    person = Field(PersonType)
+    person = Field(PersonType, key=Int(default_value=1))
+    people = List(PersonType, keys=List(Int, default_value=data.keys()))
 
-    def resolve_person(root, info):
-        # return Person("apaar", "raaj", 1)
+    def resolve_person(root, info, key):
+        return data[key]
 
-        return data[1]
-
+    def resolve_people(root, info, keys):
+        return [v for k, v in data.items() if k in keys]
 
 schema = Schema(query=Query)
