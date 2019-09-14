@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from . import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls')),
     path('books/', include('books.urls')),
 
     path('api/polls/', include('polls.urls')),
+    path('graphql/', views.GraphQLView.as_view()),
 ]
