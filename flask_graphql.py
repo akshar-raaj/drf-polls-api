@@ -1,5 +1,5 @@
-import json
-from flask import Flask, request
+import os
+from flask import Flask, request, jsonify
 
 from hello_graphene import schema
 
@@ -9,5 +9,4 @@ app = Flask(__name__)
 def graphql():
     query = request.args.get('query')
     result = schema.execute(query)
-    d = json.dumps(result.data)
-    return '{}'.format(d)
+    return jsonify(result.data)
