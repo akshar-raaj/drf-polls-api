@@ -1,13 +1,14 @@
 import collections
 from graphene import ObjectType, String, Schema, Int, Field, List
+from polls.models import Question
 
 
 Person = collections.namedtuple("Person", ['first_name', 'last_name', 'age'])
 data = {
-    1: Person("akshar", "raaj", 30),
-    2: Person("neelima", "gupta", 30),
-    3: Person("shabda", "raaj", 35),
-    4: Person("apaar", "raaj", 1)
+    1: Person("steve", "jobs", 56),
+    2: Person("bill", "gates", 63),
+    3: Person("ken", "thompson", 76),
+    4: Person("guido", "rossum", 63)
 }
 
 class PersonType(ObjectType):
