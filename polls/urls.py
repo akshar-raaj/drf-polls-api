@@ -9,7 +9,6 @@ app_name = 'polls'
 urlpatterns = [
     path('choices/', apiviews.ChoicesView.as_view(), name='choices_view'),
     path('questions/', views.QuestionsAPIView.as_view()),
-    path('graphql/', views.GraphQLView.as_view())
 ]
 
 # Multiple viewsets can be registered with a single router.

@@ -1,7 +1,5 @@
-import json
-
 from django.views import View
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 from rest_framework import generics
 from rest_framework import filters
@@ -50,5 +48,4 @@ class GraphQLView(View):
     def get(self, request, *args, **kwargs):
         search = request.GET.get('search')
         result = schema.execute(search)
-        d = json.dumps(result.data)
-        return HttpResponse(d, content_type='application/json')
+        return JsonResponse(result.data, safe=False)
