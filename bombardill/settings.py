@@ -38,9 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'graphene_django',
+
     'books',
     'polls.apps.PollsConfig',
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'bombardill.schema.schema'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
