@@ -1,4 +1,4 @@
-FROM alpine-python3:latest
+FROM python:3
 
 WORKDIR /app
 
