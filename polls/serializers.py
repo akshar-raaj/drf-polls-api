@@ -33,7 +33,7 @@ class QuestionListPageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ('id', 'question_text')
 
 
 class QuestionDetailPageSerializer(QuestionListPageSerializer):
