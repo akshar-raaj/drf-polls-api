@@ -10,7 +10,12 @@ services:
             - ./env.list
     db:
         image: postgres:12.0-alpine
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
         environment:
             - POSTGRES_USER=akshar
             - POSTGRES_PASSWORD=abc123!
             - POSTGRES_DB=bombardill
+
+volumes:
+    postgres_data:
