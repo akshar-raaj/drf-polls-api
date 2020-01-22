@@ -14,6 +14,11 @@ class QuestionResource(ModelResource):
         authorization = Authorization()
         # excludes = ('id',)
 
+    def build_filters(self, filters=None):
+        filters = super(QuestionResource, self).build_filters(filters)
+        filters['id__gt'] = 72
+        return filters
+
     def get_object_list(self, request):
         return Question.objects.filter(id__gt=71)
 
