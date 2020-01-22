@@ -25,6 +25,10 @@ class QuestionResource(ModelResource):
     def get_object_list(self, request):
         return Question.objects.filter(id__gt=71)
 
+    def dehydrate(self, bundle):
+        bundle.data['len_question_text'] = len(bundle.data['question_text'])
+        return bundle
+
 
 class ChoiceResource(ModelResource):
 
