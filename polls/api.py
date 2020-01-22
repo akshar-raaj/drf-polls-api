@@ -14,6 +14,9 @@ class QuestionResource(ModelResource):
         authorization = Authorization()
         # excludes = ('id',)
 
+    def get_object_list(self, request):
+        return Question.objects.filter(id__gt=71)
+
 
 class ChoiceResource(ModelResource):
 
