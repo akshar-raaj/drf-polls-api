@@ -14,6 +14,9 @@ class QuestionResource(ModelResource):
         authorization = Authorization()
         # excludes = ('id',)
 
+    def dehydrate_question_text(self, bundle):
+        return bundle.data['question_text'].upper()
+
     def build_filters(self, filters=None):
         filters = super(QuestionResource, self).build_filters(filters)
         filters['id__gt'] = 72
