@@ -7,6 +7,8 @@ from tastypie.authorization import Authorization
 
 class QuestionResource(ModelResource):
 
+    question_text_duplicate = fields.CharField(attribute='question_text')
+
     class Meta:
         # queryset = Question.objects.all()
         object_class = Question
