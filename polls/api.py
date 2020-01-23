@@ -5,13 +5,6 @@ from tastypie import fields
 from tastypie.authorization import Authorization
 
 
-class ChoiceResource(ModelResource):
-
-    question_text_lower = fields.CharField(attribute='question__question_text_lower')
-
-    class Meta:
-        queryset = Choice.objects.all()
-        resource_name = 'choices'
 
 
 class QuestionResource(ModelResource):
@@ -28,3 +21,14 @@ class QuestionResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data['len_question_text'] = len(bundle.data['question_text'])
         return bundle
+
+
+class ChoiceResource(ModelResource):
+
+    question_text_lower = fields.CharField(attribute='question__question_text_lower', readonly=True)
+    question = fields.ForeignKey(QuestionResource, attribute='question')
+
+    class Meta:
+        queryset = Choice.objects.all()
+        resource_name = 'choices'
+        authorization = Authorization()
