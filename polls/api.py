@@ -5,10 +5,20 @@ from tastypie import fields
 from tastypie.authorization import Authorization
 
 
+class ChoiceResource(ModelResource):
+
+    question_text_lower = fields.CharField(attribute='question__question_text_lower')
+
+    class Meta:
+        queryset = Choice.objects.all()
+        resource_name = 'choices'
+
+
 class QuestionResource(ModelResource):
 
     question_text_duplicate = fields.CharField(attribute='question_text')
     question_text_lower = fields.CharField(attribute='question_text_lower')
+    choices = fields.ManyToManyField(ChoiceResource, attribute='choice_set', full=True)
 
     class Meta:
         # queryset = Question.objects.all()
@@ -33,13 +43,6 @@ class QuestionResource(ModelResource):
         return bundle
 
 
-class ChoiceResource(ModelResource):
-
-    question = fields.ForeignKey(QuestionResource, 'question', full=True)
-
-    class Meta:
-        queryset = Choice.objects.all()
-        resource_name = 'choices'
 
 class PersonResource(ModelResource):
 
